@@ -14,6 +14,16 @@ export const authService = {
   async login(credentials) {
     try {
       const response = await apiClient.post('/auth/login', credentials)
+      console.log('Raw API response:', response)
+      console.log('Response data:', response.data)
+      
+      // 백엔드가 SuccessResponse로 래핑하여 반환하는 경우
+      // response.data = { status: 'success', code: 200, message: { token: '...', user: {...} } }
+      if (response.data && response.data.status === 'success' && response.data.message) {
+        console.log('Detected SuccessResponse wrapper, extracting message')
+        return response.data.message
+      }
+      
       return response.data
     } catch (error) {
       console.error('Login API error:', error)
@@ -66,6 +76,15 @@ export const authService = {
           Authorization: `Bearer ${token}`
         }
       })
+      console.log('Raw validate response:', response)
+      console.log('Validate response data:', response.data)
+      
+      // 백엔드가 SuccessResponse로 래핑하여 반환하는 경우
+      if (response.data && response.data.status === 'success' && response.data.message) {
+        console.log('Detected SuccessResponse wrapper in validate, extracting message')
+        return response.data.message
+      }
+      
       return response.data
     } catch (error) {
       console.error('Token validation error:', error)

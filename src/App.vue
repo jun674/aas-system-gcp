@@ -25,12 +25,23 @@ const authStore = useAuthStore()
 
 // 앱 시작 시 인증 상태 확인
 onMounted(async () => {
+  console.log('App mounted - checking auth state')
+  console.log('Current token:', authStore.token)
+  console.log('Is authenticated:', authStore.isAuthenticated)
+  console.log('Current user:', authStore.currentUser)
+  
   if (authStore.token) {
     try {
+      console.log('Token exists, checking auth...')
       await authStore.checkAuth()
+      console.log('Auth check completed')
+      console.log('User after check:', authStore.currentUser)
+      console.log('Role after check:', authStore.userRole)
     } catch (error) {
       console.error('Auth check failed:', error)
     }
+  } else {
+    console.log('No token found, user not authenticated')
   }
 })
 </script>

@@ -64,6 +64,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useUiStore } from '@/stores/ui'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   isOpen: {
@@ -77,6 +78,7 @@ const emit = defineEmits(['close', 'login-success'])
 // Stores
 const authStore = useAuthStore()
 const uiStore = useUiStore()
+const router = useRouter()
 
 // Local state
 const formData = reactive({
@@ -119,6 +121,10 @@ const handleLogin = async () => {
 
       emit('login-success', result.user)
       closeModal()
+      
+      // 라우터를 사용해서 메인 페이지로 이동
+      // 페이지 새로고침 대신 Vue Router를 사용하면 상태가 유지됨
+      router.push('/')
     }
   } catch (error) {
     // 에러 알림 표시
